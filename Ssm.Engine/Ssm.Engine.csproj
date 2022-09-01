@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>disable</Nullable>
+    <Version>1.1.2209.3</Version>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Authors>Uncle Zheng</Authors>
+    <Description>声声慢脚本引擎</Description>
+    <PackageIcon>script.png</PackageIcon>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\script.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="egg" Version="12.5.2207.48" />
+    <PackageReference Include="Sevm.Engine" Version="1.1.2209.28" />
+  </ItemGroup>
+
+</Project>
