@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="egg" Version="12.5.2207.48" />
-    <PackageReference Include="Sevm.Engine" Version="1.1.2209.28" />
+    <PackageReference Include="Sevm.Engine" Version="1.1.2209.33" />
   </ItemGroup>
 
 </Project>

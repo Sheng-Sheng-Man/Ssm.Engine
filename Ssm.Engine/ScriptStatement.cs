@@ -269,7 +269,7 @@ namespace Ssm.Engine {
                     throw new SirException(this.SourceLine, 0, $"意外的'{str}'语句");
                 }
             }
-            return this.Segment;
+            //return this.Segment;
         }
 
         /// <summary>

@@ -531,7 +531,7 @@ namespace Ssm {
         /// <param name="func"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public Sevm.Engine.Memory.Value Execute(string func, Params args = null) {
+        public Sevm.MemoryPtr Execute(string func, Params args = null) {
             return sevmEngine.Execute(func, args, true);
         }
 
@@ -539,7 +539,7 @@ namespace Ssm {
         /// 执行主函数
         /// </summary>
         /// <returns></returns>
-        public Sevm.Engine.Memory.Value Execute() {
+        public Sevm.MemoryPtr Execute() {
             return sevmEngine.Execute();
         }
 
@@ -591,8 +591,8 @@ namespace Ssm {
                     sb.Append(" NULL \r\n");
                 } else {
                     sb.Append(sevmEngine.Variables[i].Name);
-                    sb.Append(" -> [");
-                    sb.Append(sevmEngine.Variables[i].IntPtr);
+                    sb.Append(" -> [0x");
+                    sb.Append(sevmEngine.Variables[i].MemoryPtr.IntPtr.ToString("x"));
                     sb.Append("]\r\n");
                 }
             }
@@ -610,17 +610,7 @@ namespace Ssm {
                 }
             }
             sb.Append("\r\n");
-            sb.Append($"虚拟机 SEVM 虚拟内存 [{sevmEngine.Memories.Count}]:\r\n");
-            for (int i = 0; i < sevmEngine.Memories.Count; i++) {
-                var mem = sevmEngine.Memories[i];
-                sb.Append($"    [{i}] ");
-                sb.Append(mem.GetType().Name);
-                try {
-                    sb.Append(" ");
-                    sb.Append(mem.ToString());
-                } catch { }
-                sb.Append("\r\n");
-            }
+            sb.Append($"虚拟机 SEVM 虚拟内存使用量 [{sevmEngine.Memory.SpaceOccupied}]\r\n");
             return sb.ToString();
         }
 
