@@ -67,7 +67,7 @@ namespace Ssm.Engine.ScriptStatements {
             SirExpression target = SirExpression.Variable(idx);
             // 添加定义信息及相关指令
             engine.SirScript.Defines.Add(SirScopeTypes.Private, idx, varName);
-            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, target);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, target.Content);
             return segment;
         }
 

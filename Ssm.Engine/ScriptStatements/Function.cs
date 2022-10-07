@@ -91,7 +91,7 @@ namespace Ssm.Engine.ScriptStatements {
                     SirExpression target = SirExpression.Variable(idx);
                     // 添加定义信息及相关指令
                     engine.SirScript.Defines.Add(SirScopeTypes.Private, idx, varName);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, target);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, target.Content);
                     // 获取参数信息
                     SirExpression key = engine.GetStringIntPtr(name);
                     var ls = SirExpression.Variable(engine.VariableIndexer.GetNewIndex());
@@ -100,21 +100,21 @@ namespace Ssm.Engine.ScriptStatements {
                     var objValues = SirExpression.Variable(engine.VariableIndexer.GetNewIndex());
                     var objValue = SirExpression.Variable(engine.VariableIndexer.GetNewIndex());
                     // 获取参数列表
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, ls, SirExpression.Register(0));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, ls.Content, 1);
                     // 获取参数中的对象
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Leal, SirExpression.Register(2), ls, 0);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, obj, SirExpression.Register(2));
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Leak, SirExpression.Register(2), obj);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objKeys, SirExpression.Register(2));
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Leav, SirExpression.Register(2), obj);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objValues, SirExpression.Register(2));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Leal, 3, ls.Content, 0);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, obj.Content, 3);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Leak, 3, obj.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objKeys.Content, 3);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Leav, 3, obj.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objValues.Content, 3);
                     // 获取属性索引
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Idx, SirExpression.Register(2), objKeys, key);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Leal, SirExpression.Register(3), objValues, SirExpression.Register(2));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Idx, 3, objKeys.Content, key.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Leal, 4, objValues.Content, 3);
                     // 获取属性值
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objValue, SirExpression.Register(3));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objValue.Content, 4);
                     // 将属性值给变量
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, objValue);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target.Content, objValue.Content);
                 }
             }
             return seg;

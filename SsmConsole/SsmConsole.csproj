@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>1.0.2209.4</Version>
+    <Version>1.1.2210.5</Version>
     <AssemblyName>ssm</AssemblyName>
   </PropertyGroup>
 

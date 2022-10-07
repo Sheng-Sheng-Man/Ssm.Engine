@@ -55,7 +55,7 @@ namespace Ssm.Engine.ScriptStatements {
             ScriptSegment seg = segment;
             if (statement.IsEmpty()) throw new SirException(line, 0, "缺少变量名称定义");
             // 转存语句
-            string[] strs = statement.Split(",");;
+            string[] strs = statement.Split(","); ;
             Debug.WriteLine($"{this.Type.ToString()} strs.Length:{strs.Length}");
             string funName = strs[0];
             // 添加变量名称调试
@@ -130,24 +130,24 @@ namespace Ssm.Engine.ScriptStatements {
             #region [=====添加处理指令=====]
             // 添加对象定义
             SirExpression obj = engine.GetNewVariable();
-            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, obj);
-            seg.Codes.Add(line, SirCodeInstructionTypes.Obj, obj);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, obj.Content);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Obj, obj.Content);
             // 获取对象键列表
-            seg.Codes.Add(line, SirCodeInstructionTypes.Leak, SirExpression.Register(2), obj);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Leak, 2, obj.Content);
             SirExpression objKeys = SirExpression.Variable(engine.VariableIndexer.GetNewIndex());
-            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objKeys, SirExpression.Register(2));
+            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objKeys.Content, 2);
             // 获取对象值列表
-            seg.Codes.Add(line, SirCodeInstructionTypes.Leav, SirExpression.Register(2), obj);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Leav, 2, obj.Content);
             SirExpression objValues = SirExpression.Variable(engine.VariableIndexer.GetNewIndex());
-            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objValues, SirExpression.Register(2));
+            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, objValues.Content, 2);
             string[] keys = args.Keys.ToArray();
             // 绑定键
             for (int i = 0; i < keys.Length; i++) {
                 // 创建键字符串表达式
                 SirExpression key = engine.GetStringIntPtr(keys[i]);
                 // 将键值绑定到键列表中
-                seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(2), key);
-                seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objKeys, i, SirExpression.Register(2));
+                seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 2, key.Content);
+                seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objKeys.Content, engine.GetReadonlyValue(i).Content, 2);
             }
             // 绑定值
             for (int i = 0; i < keys.Length; i++) {
@@ -157,30 +157,30 @@ namespace Ssm.Engine.ScriptStatements {
                     case SirExpressionTypes.Value:
                         // 新建一个值变量
                         SirExpression value = engine.GetNewVariable();
-                        seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(2), value);
-                        seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objValues, i, SirExpression.Register(2));
-                        seg.Codes.Add(line, SirCodeInstructionTypes.Mov, value, arg);
+                        seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 2, value.Content);
+                        seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objValues.Content, engine.GetReadonlyValue(i).Content, 2);
+                        seg.Codes.Add(line, SirCodeInstructionTypes.Mov, value.Content, arg.Content);
                         break;
                     case SirExpressionTypes.IntPtr:
-                        seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objValues, i, arg.Content);
+                        seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objValues.Content, engine.GetReadonlyValue(i).Content, arg.Content);
                         break;
                     case SirExpressionTypes.Variable:
-                        seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(2), arg);
-                        seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objValues, i, SirExpression.Register(2));
+                        seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 2, arg.Content);
+                        seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, objValues.Content, engine.GetReadonlyValue(i).Content, 2);
                         break;
                     default: throw new SirException(line, 0, $"不支持的参数类型'{arg.Type.ToString()}'");
                 }
             }
             // 添加参数列表
             SirExpression param = engine.GetNewVariable();
-            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, param);
-            seg.Codes.Add(line, SirCodeInstructionTypes.List, param);
-            seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(2), obj);
-            seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, param, 0, SirExpression.Register(2));
-            seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(0), param);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, param.Content);
+            seg.Codes.Add(line, SirCodeInstructionTypes.List, param.Content);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 3, obj.Content);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, param.Content, engine.GetReadonlyValue(0).Content, 3);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 1, param.Content);
             // 添加执行语句
             if (ret == null) ret = SirExpression.IntPtr(0);
-            seg.Codes.Add(line, SirCodeInstructionTypes.Call, ret, func);
+            seg.Codes.Add(line, SirCodeInstructionTypes.Call, ret.Content, func.Content);
             #endregion
             return seg;
         }

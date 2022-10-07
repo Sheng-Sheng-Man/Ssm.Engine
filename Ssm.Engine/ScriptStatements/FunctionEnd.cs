@@ -65,7 +65,7 @@ namespace Ssm.Engine.ScriptStatements {
                 debugs.Add($"Ret {name}");
                 // 添加指令
                 SirExpression ret = seg.GetValueExpression(name);
-                seg.Codes.Add(line, SirCodeInstructionTypes.Ret, ret);
+                seg.Codes.Add(line, SirCodeInstructionTypes.Ret, ret.Content);
             }
             return seg.Parent;
         }

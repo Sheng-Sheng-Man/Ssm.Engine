@@ -61,15 +61,15 @@ namespace Ssm.Engine.ScriptStatements {
             if (!strs[0].StartsWith("条件是")) throw new SirException(line, 0, "缺少条件定义");
             strs[0] = strs[0].Substring(3);
             // 创建新的程序段
-            int labIndex = engine.Segments.Indexer.GetNewIndex();
+            int labIndex = engine.VariableIndexer.GetNewIndex();
             seg = new ScriptSegment(engine, labIndex, "", ScriptSemanticTypes.If, seg);
-            seg.IndexForTrue = engine.Segments.Indexer.GetNewIndex();
-            seg.IndexForFalse = engine.Segments.Indexer.GetNewIndex();
-            seg.IndexForEnd = engine.Segments.Indexer.GetNewIndex();
+            seg.IndexForTrue = engine.VariableIndexer.GetNewIndex();
+            seg.IndexForFalse = engine.VariableIndexer.GetNewIndex();
+            seg.IndexForEnd = engine.VariableIndexer.GetNewIndex();
             engine.Segments.Add(seg);
             // 添加跳转
-            seg.Parent.Codes.Add(line, SirCodeInstructionTypes.Jmp, SirExpression.Label(labIndex));
-            seg.Parent.Codes.Add(line, SirCodeInstructionTypes.Label, SirExpression.Label(seg.IndexForEnd));
+            seg.Parent.Codes.Add(line, SirCodeInstructionTypes.Jmp, labIndex);
+            seg.Parent.Codes.Add(line, SirCodeInstructionTypes.Label, seg.IndexForEnd);
             // 带名称定义
             if (!name.IsEmpty()) {
                 engine.Labels[name] = seg.Index;
@@ -107,22 +107,22 @@ namespace Ssm.Engine.ScriptStatements {
                     if (tpLogic == -1) { // 普通
                         // 添加调试
                         debugs.Add($"{targetName}>={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
                     } else if (tpLogic == 1) { // and
                         // 添加调试
                         debugs.Add($"And {targetName}>={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, 1, 3);
                     } else if (tpLogic == 2) { // or
                         // 添加调试
                         debugs.Add($"Or {targetName}>={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, 1, 3);
                     } else {
                         throw new SirException(line, 0, "缺少连接模式设定");
                     }
@@ -140,22 +140,22 @@ namespace Ssm.Engine.ScriptStatements {
                     if (tpLogic == -1) { // 普通
                         // 添加调试
                         debugs.Add($"{targetName}<={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
                     } else if (tpLogic == 1) { // and
                         // 添加调试
                         debugs.Add($"And {targetName}<={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, 1, 3);
                     } else if (tpLogic == 2) { // or
                         // 添加调试
                         debugs.Add($"Or {targetName}<={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, 1, 3);
                     } else {
                         throw new SirException(line, 0, "缺少连接模式设定");
                     }
@@ -173,22 +173,22 @@ namespace Ssm.Engine.ScriptStatements {
                     if (tpLogic == -1) { // 普通
                         // 添加调试
                         debugs.Add($"{targetName}!={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
                     } else if (tpLogic == 1) { // and
                         // 添加调试
                         debugs.Add($"And {targetName}!={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, 1, 3);
                     } else if (tpLogic == 2) { // or
                         // 添加调试
                         debugs.Add($"Or {targetName}!={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Not, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, 1, 3);
                     } else {
                         throw new SirException(line, 0, "缺少连接模式设定");
                     }
@@ -206,19 +206,19 @@ namespace Ssm.Engine.ScriptStatements {
                     if (tpLogic == -1) { // 普通
                         // 添加调试
                         debugs.Add($"{targetName}={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, SirExpression.Register(0), target, source);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, 1, target.Content, source.Content);
                     } else if (tpLogic == 1) { // and
                         // 添加调试
                         debugs.Add($"And {targetName}={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, 1, 3);
                     } else if (tpLogic == 2) { // or
                         // 添加调试
                         debugs.Add($"Or {targetName}={sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Equal, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, 1, 3);
                     } else {
                         throw new SirException(line, 0, "缺少连接模式设定");
                     }
@@ -236,19 +236,19 @@ namespace Ssm.Engine.ScriptStatements {
                     if (tpLogic == -1) { // 普通
                         // 添加调试
                         debugs.Add($"{targetName}>{sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, SirExpression.Register(0), target, source);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, 1, target.Content, source.Content);
                     } else if (tpLogic == 1) { // and
                         // 添加调试
                         debugs.Add($"And {targetName}>{sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, 1, 3);
                     } else if (tpLogic == 2) { // or
                         // 添加调试
                         debugs.Add($"Or {targetName}>{sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Large, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, 1, 3);
                     } else {
                         throw new SirException(line, 0, "缺少连接模式设定");
                     }
@@ -266,19 +266,19 @@ namespace Ssm.Engine.ScriptStatements {
                     if (tpLogic == -1) { // 普通
                         // 添加调试
                         debugs.Add($"{targetName}<{sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, SirExpression.Register(0), target, source);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, 1, target.Content, source.Content);
                     } else if (tpLogic == 1) { // and
                         // 添加调试
                         debugs.Add($"And {targetName}<{sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.And, 1, 3);
                     } else if (tpLogic == 2) { // or
                         // 添加调试
                         debugs.Add($"Or {targetName}<{sourceName}");
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, SirExpression.Register(2), SirExpression.Register(0));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, SirExpression.Register(0), target, source);
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, SirExpression.Register(0), SirExpression.Register(2));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Mov, 3, 1);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Small, 1, target.Content, source.Content);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Or, 1, 3);
                     } else {
                         throw new SirException(line, 0, "缺少连接模式设定");
                     }

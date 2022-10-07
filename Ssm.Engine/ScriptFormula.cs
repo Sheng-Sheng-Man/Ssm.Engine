@@ -89,7 +89,7 @@ namespace Ssm.Engine {
                             num1 = sbChild.ToString();
                             sbChild.Clear();
                             // 添加运算指令
-                            seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                            seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                             //seg.Codes.Add(tp, tempVar, seg.GetValueExpression(num1));
                             // 指定下一次运算的指令类型
                             tp = SirCodeInstructionTypes.Mul;
@@ -109,10 +109,10 @@ namespace Ssm.Engine {
                                 // 创建临时变量
                                 tempVar = seg.Engine.GetNewVariable();
                                 // 添加指令
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar);
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar.Content);
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar.Content, seg.GetValueExpression(num1).Content);
                                 //seg.Codes.Add(SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
-                                seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num2));
+                                seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num2).Content);
                                 //seg.Codes.Add(tp, tempVar, seg.GetValueExpression(num2));
                                 // 指定下一次运算的指令类型
                                 tp = SirCodeInstructionTypes.Mul;
@@ -129,7 +129,7 @@ namespace Ssm.Engine {
                             num1 = sbChild.ToString();
                             sbChild.Clear();
                             // 添加运算指令
-                            seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                            seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                             //seg.Codes.Add(tp, tempVar, seg.GetValueExpression(num1));
                             // 指定下一次运算的指令类型
                             tp = SirCodeInstructionTypes.Div;
@@ -149,9 +149,9 @@ namespace Ssm.Engine {
                                 // 创建临时变量
                                 tempVar = seg.Engine.GetNewVariable();
                                 // 添加指令
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar);
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
-                                seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num2));
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar.Content);
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar.Content, seg.GetValueExpression(num1).Content);
+                                seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num2).Content);
                                 // 指定下一次运算的指令类型
                                 tp = SirCodeInstructionTypes.Div;
                                 num1 = null;
@@ -169,7 +169,7 @@ namespace Ssm.Engine {
                             num1 = sbChild.ToString();
                             sbChild.Clear();
                             // 添加运算指令
-                            seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                            seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                             // 将临时变量添加至算式中
                             sbParent.Append(tempVar.ToString());
                             // 跳出运算
@@ -196,7 +196,7 @@ namespace Ssm.Engine {
                 num1 = sbChild.ToString();
                 sbChild.Clear();
                 // 添加运算指令
-                seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                 // 将临时变量添加至算式中
                 sbParent.Append(tempVar.ToString());
                 // 跳出运算
@@ -217,9 +217,9 @@ namespace Ssm.Engine {
                     // 创建临时变量
                     tempVar = seg.Engine.GetNewVariable();
                     // 添加指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
-                    seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num2));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar.Content, seg.GetValueExpression(num1).Content);
+                    seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num2).Content);
                     // 将临时变量添加至算式中
                     sbParent.Append(tempVar.ToString());
                     // 指定下一次运算的指令类型
@@ -244,7 +244,7 @@ namespace Ssm.Engine {
                             num1 = sbChild.ToString();
                             sbChild.Clear();
                             // 添加运算指令
-                            seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                            seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                             // 指定下一次运算的指令类型
                             tp = SirCodeInstructionTypes.Add;
                         } else {
@@ -261,9 +261,9 @@ namespace Ssm.Engine {
                                 // 创建临时变量
                                 tempVar = seg.Engine.GetNewVariable();
                                 // 添加指令
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar);
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
-                                seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num2));
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar.Content);
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar.Content, seg.GetValueExpression(num1).Content);
+                                seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num2).Content);
                                 // 指定下一次运算的指令类型
                                 tp = SirCodeInstructionTypes.Add;
                             }
@@ -277,7 +277,7 @@ namespace Ssm.Engine {
                             num1 = sbChild.ToString();
                             sbChild.Clear();
                             // 添加运算指令
-                            seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                            seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                             // 指定下一次运算的指令类型
                             tp = SirCodeInstructionTypes.Div;
                         } else {
@@ -294,9 +294,9 @@ namespace Ssm.Engine {
                                 // 创建临时变量
                                 tempVar = seg.Engine.GetNewVariable();
                                 // 添加指令
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar);
-                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
-                                seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num2));
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar.Content);
+                                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar.Content, seg.GetValueExpression(num1).Content);
+                                seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num2).Content);
                                 // 指定下一次运算的指令类型
                                 tp = SirCodeInstructionTypes.Div;
                             }
@@ -314,7 +314,7 @@ namespace Ssm.Engine {
                 num1 = sbChild.ToString();
                 sbChild.Clear();
                 // 添加运算指令
-                seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num1));
+                seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num1).Content);
                 source = tempVar;
             } else {
                 // 不存在临时变量，则代表是新运算的开始
@@ -331,16 +331,16 @@ namespace Ssm.Engine {
                     // 创建临时变量
                     tempVar = seg.Engine.GetNewVariable();
                     // 添加指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar, seg.GetValueExpression(num1));
-                    seg.Codes.Add(line, tp, tempVar, seg.GetValueExpression(num2));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, tempVar.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, tempVar.Content, seg.GetValueExpression(num1).Content);
+                    seg.Codes.Add(line, tp, tempVar.Content, seg.GetValueExpression(num2).Content);
                     source = tempVar;
                 }
             }
             #endregion
             // 判断是否为完整算式
             if (target != null) {
-                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source);
+                seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target.Content, source.Content);
                 //seg.Mov(target, source, true);
                 return null;
             }

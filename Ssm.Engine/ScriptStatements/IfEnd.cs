@@ -56,20 +56,20 @@ namespace Ssm.Engine.ScriptStatements {
                 case ScriptSemanticTypes.IfTrue:
                     // 添加跳转
                     if (!seg.Parent.HasFalse) {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, SirExpression.Label(seg.Parent.IndexForFalse));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.Parent.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, seg.Parent.IndexForFalse);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.Parent.IndexForEnd);
                     } else {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.Parent.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.Parent.IndexForEnd);
                     }
                     seg = seg.Parent.Parent;
                     break;
                 case ScriptSemanticTypes.IfFalse:
                     // 添加跳转
                     if (!seg.Parent.HasTrue) {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, SirExpression.Label(seg.Parent.IndexForTrue));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.Parent.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, seg.Parent.IndexForTrue);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.Parent.IndexForEnd);
                     } else {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.Parent.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.Parent.IndexForEnd);
                     }
                     seg = seg.Parent.Parent;
                     break;
@@ -77,13 +77,13 @@ namespace Ssm.Engine.ScriptStatements {
                     // 添加跳转
                     if ((!seg.HasFalse) && (!seg.HasTrue)) throw new SirException(line, 0, "语法错误：意外的结束语句");
                     if (!seg.HasTrue) {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, SirExpression.Label(seg.IndexForTrue));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, seg.IndexForTrue);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.IndexForEnd);
                     } else if (!seg.HasFalse) {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, SirExpression.Label(seg.IndexForFalse));
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Label, seg.IndexForFalse);
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.IndexForEnd);
                     } else {
-                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.IndexForEnd));
+                        seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.IndexForEnd);
                     }
                     seg = seg.Parent;
                     break;

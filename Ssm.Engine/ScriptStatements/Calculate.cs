@@ -92,7 +92,7 @@ namespace Ssm.Engine.ScriptStatements {
                 if (!isResolved) throw new SirException(line, 0, $"不支持的语句'{str}'");
             }
             // 添加指令
-            if (!(target.Type == SirExpressionTypes.IntPtr && target.Content == 0)) seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source);
+            if (!(target.Type == SirExpressionTypes.IntPtr && target.Content == 0)) seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target.Content, source.Content);
             return seg;
         }
 

@@ -82,16 +82,10 @@ namespace Ssm.Engine {
             if (strValue == "真") return SirExpression.Value(1);
             if (strValue == "假") return SirExpression.Value(0);
             if (strValue.IsDouble()) { // 判断是否为数字
-                // 判断是否为小数
-                if (strValue.IndexOf(".") >= 0) {
-                    // 小数则使用内存处理
-                    int idx = this.Engine.VariableIndexer.GetNewIndex();
-                    this.Engine.SirScript.Datas.Add(idx, strValue.ToDouble());
-                    return SirExpression.Variable(idx);
-                } else {
-                    // 整数则使用值来处理
-                    return SirExpression.Value(strValue.ToInteger()); // new Sevm.Sir.SirCodeParam() { ParamType = Sevm.Sir.SirCodeParamTypes.Value, Value = strValue.ToInteger() };
-                }
+                // 小数则使用内存处理
+                int idx = this.Engine.VariableIndexer.GetNewIndex();
+                this.Engine.SirScript.Datas.Add(idx, strValue.ToDouble());
+                return SirExpression.Variable(idx);
             } else if (strValue.Length >= 4 && ((strValue.StartsWith("\"'") && strValue.EndsWith("'\"")) || (strValue.StartsWith("““") && strValue.EndsWith("””")))) { // 判断是否为强字符串
                 // 获取新的虚拟内存索引
                 int idx = this.Engine.VariableIndexer.GetNewIndex();
@@ -157,7 +151,7 @@ namespace Ssm.Engine {
             // 初始化指令集
             this.Codes = new Sevm.Sir.SirCodes();
             // 添加标签指令
-            this.Codes.Add(0, SirCodeInstructionTypes.Label, SirExpression.Label(this.Index));
+            this.Codes.Add(0, SirCodeInstructionTypes.Label, this.Index);
         }
 
         /// <summary>

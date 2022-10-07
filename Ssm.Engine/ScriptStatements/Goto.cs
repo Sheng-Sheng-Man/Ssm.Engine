@@ -52,7 +52,7 @@ namespace Ssm.Engine.ScriptStatements {
             debugs = new List<string>();
             ScriptSegment seg = segment;
             int labIndex = seg.Engine.Labels[statement];
-            seg.Codes.Add(line, SirCodeInstructionTypes.Jmp, SirExpression.Label(labIndex));
+            seg.Codes.Add(line, SirCodeInstructionTypes.Jmp, labIndex);
             return seg;
         }
 

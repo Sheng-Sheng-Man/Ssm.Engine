@@ -95,6 +95,22 @@ namespace Ssm {
         // 标签缓存
         internal Dictionary<string, int> Labels { get; private set; }
 
+        // 只读数字缓存
+        private Dictionary<double, int> readonlyValues;
+
+        /// <summary>
+        /// 获取只读值的变量名称
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public SirExpression GetReadonlyValue(double value) {
+            if (readonlyValues.ContainsKey(value)) return SirExpression.Variable(readonlyValues[value]);
+            int index = this.VariableIndexer.GetNewIndex();
+            this.SirScript.Datas.Add(index, value);
+            readonlyValues[value] = index;
+            return SirExpression.Variable(index);
+        }
+
         /// <summary>
         /// 获取函数定义表达式
         /// </summary>
@@ -181,7 +197,7 @@ namespace Ssm {
         /// <param name="script"></param>
         public void LoadScript(string script) {
             // 申请新的代码段
-            ScriptSegment seg = new ScriptSegment(this, this.Segments.Indexer.GetNewIndex(), ScriptEngine.Segment_None, ScriptSemanticTypes.Function);
+            ScriptSegment seg = new ScriptSegment(this, this.VariableIndexer.GetNewIndex(), ScriptEngine.Segment_None, ScriptSemanticTypes.Function);
             this.Segments.Add(seg);
             // 定义临时变量
             StringBuilder sb = new StringBuilder();
@@ -512,9 +528,10 @@ namespace Ssm {
             this.Statements = new List<ScriptStatement>();
             this.Segments = new ScriptSegments();
             this.MemoryIndexer = new ScriptIndexer();
-            this.VariableIndexer = new ScriptIndexer();
+            this.VariableIndexer = new ScriptIndexer(10);
             this.funcs = new ScriptFunctionCache();
             this.Labels = new Dictionary<string, int>();
+            readonlyValues = new Dictionary<double, int>();
         }
 
         /// <summary>
@@ -598,16 +615,13 @@ namespace Ssm {
             }
             sb.Append("\r\n");
             sb.Append($"虚拟机 SEVM 标签 [{sevmEngine.Labels.Count}]:\r\n");
-            for (int i = 0; i < sevmEngine.Labels.Count; i++) {
-                sb.Append($"    @{i} ");
-                if (sevmEngine.Labels[i] == null) {
-                    sb.Append("NULL\r\n");
-                } else {
-                    sb.Append(sevmEngine.Labels[i].Name);
-                    sb.Append(" -> Line:");
-                    sb.Append(sevmEngine.Labels[i].IntPtr);
-                    sb.Append("\r\n");
-                }
+            foreach (var item in sevmEngine.Labels) {
+                var lab = item.Value;
+                sb.Append("$");
+                sb.Append(item.Key);
+                sb.Append(" -> Line:");
+                sb.Append(lab.IntPtr);
+                sb.Append("\r\n");
             }
             sb.Append("\r\n");
             sb.Append($"虚拟机 SEVM 虚拟内存使用量 [{sevmEngine.Memory.SpaceOccupied}]\r\n");

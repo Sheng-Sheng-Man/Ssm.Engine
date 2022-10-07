@@ -61,12 +61,12 @@ namespace Ssm.Engine.ScriptStatements {
             // 添加变量名称调试
             debugs.Add(name);
             // 申请定义变量
-            int idx = engine.VariableIndexer.GetNewIndex();
+            int target = engine.VariableIndexer.GetNewIndex();
             // 组织变量名称
             string varName = seg.GetFullVariableName(name);
-            SirExpression target = SirExpression.Variable(idx);
+            //SirExpression target = SirExpression.Variable(idx);
             // 添加定义信息及相关指令
-            engine.SirScript.Defines.Add(SirScopeTypes.Private, idx, varName);
+            engine.SirScript.Defines.Add(SirScopeTypes.Private, target, varName);
             seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, target);
             // 遍历剩下的
             for (int i = 1; i < strs.Length; i++) {
@@ -84,7 +84,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -96,7 +96,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -108,7 +108,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mov, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -131,7 +131,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Add, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Add, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -143,7 +143,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Sub, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Sub, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -155,7 +155,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Mul, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Mul, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -167,7 +167,7 @@ namespace Ssm.Engine.ScriptStatements {
                     // 定义数据源
                     SirExpression source = seg.GetValueExpression(sourceName);
                     // 添加相关指令
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Div, target, source);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Div, target, source.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }
@@ -181,15 +181,15 @@ namespace Ssm.Engine.ScriptStatements {
                     // 添加相关指令
                     SirExpression ls = engine.GetNewVariable();
                     // 新建列表
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, ls);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.List, ls);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptr, ls.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.List, ls.Content);
                     // 添加第一个项目
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(2), target);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, ls, 0, SirExpression.Register(2));
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 3, target);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, ls.Content, engine.GetReadonlyValue(0).Content, 3);
                     // 添加第二个项目
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Lea, SirExpression.Register(2), source);
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, ls, 1, SirExpression.Register(2));
-                    seg.Codes.Add(line, SirCodeInstructionTypes.Join, target, ls);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Lea, 3, source.Content);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Ptrl, ls.Content, engine.GetReadonlyValue(1).Content, 3);
+                    seg.Codes.Add(line, SirCodeInstructionTypes.Join, target, ls.Content);
                     // 设置为解析成功
                     isResolved = true;
                 }

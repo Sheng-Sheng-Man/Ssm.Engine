@@ -57,7 +57,7 @@ namespace Ssm.Engine.ScriptStatements {
                     if (seg.Parent.HasTrue) throw new SirException(line, 0, "语法错误：意外的满足语句");
                     // 建立完整标签
                     seg.Parent.HasTrue = true;
-                    seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.Parent.IndexForEnd));
+                    seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.Parent.IndexForEnd);
                     seg = new ScriptSegment(engine, seg.Parent.IndexForTrue, "", ScriptSemanticTypes.IfTrue, seg.Parent);
                     engine.Segments.Add(seg);
                     break;
@@ -65,8 +65,8 @@ namespace Ssm.Engine.ScriptStatements {
                     if (seg.HasTrue) throw new SirException(line, 0, "语法错误：意外的满足语句");
                     // 建立标签
                     seg.HasTrue = true;
-                    seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmpf, SirExpression.Register(0), SirExpression.Label(seg.IndexForTrue));
-                    seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, SirExpression.Label(seg.IndexForFalse));
+                    seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmpf, 1, seg.IndexForTrue);
+                    seg.Codes.Add(line, Sevm.Sir.SirCodeInstructionTypes.Jmp, seg.IndexForFalse);
                     seg = new ScriptSegment(engine, seg.IndexForTrue, "", ScriptSemanticTypes.IfTrue, seg);
                     engine.Segments.Add(seg);
                     break;
